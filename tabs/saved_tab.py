@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import ttk, messagebox
 import locales as lang
+from styles.theme import BG, SURFACE
 from styles.button_style import ButtonStyle
 from utils.utils import copy_to_clipboard
 from database.database import fetch_all, delete_from_db
@@ -17,27 +18,37 @@ class SavedTab:
         lang.register_callback(self._retranslate)
 
     def _build(self, parent: ttk.Frame) -> None:
-        columns = ("Website", "Email", "Password")
-        self.tree = ttk.Treeview(parent, columns=columns, show="headings", selectmode="browse")
+        tree_frame = ttk.Frame(parent)
+        tree_frame.pack(fill="both", expand=True, padx=0, pady=(0, 0))
 
-        self.tree.heading("Website", text=lang.t("col_website"))
-        self.tree.heading("Email", text=lang.t("col_email"))
+        columns = ("Website", "Email", "Password")
+        self.tree = ttk.Treeview(tree_frame, columns=columns, show="headings", selectmode="browse")
+
+        self.tree.heading("Website",  text=lang.t("col_website"))
+        self.tree.heading("Email",    text=lang.t("col_email"))
         self.tree.heading("Password", text=lang.t("col_password"))
 
-        self.tree.column("Website", width=150)
-        self.tree.column("Email", width=200)
-        self.tree.column("Password", width=100)
+        self.tree.column("Website",  width=160, anchor="w")
+        self.tree.column("Email",    width=200, anchor="w")
+        self.tree.column("Password", width=100, anchor="center")
 
-        self.tree.pack(fill="both", expand=True)
+        scrollbar = ttk.Scrollbar(tree_frame, orient="vertical", command=self.tree.yview)
+        self.tree.configure(yscrollcommand=scrollbar.set)
+
+        self.tree.pack(side="left", fill="both", expand=True)
+        scrollbar.pack(side="right", fill="y")
         self.tree.bind("<Double-1>", self._on_item_click)
 
-        self.btn_delete = ButtonStyle(parent, text=lang.t("btn_delete_selected"), command=self._delete_selected)
-        self.btn_delete.pack(pady=5)
+        bottom = tk.Frame(parent, bg=BG)
+        bottom.pack(fill="x", pady=10)
+
+        self.btn_delete = ButtonStyle(bottom, text=lang.t("btn_delete_selected"), command=self._delete_selected)
+        self.btn_delete.pack()
 
     def _retranslate(self) -> None:
         self.tab_control.tab(self.frame, text=lang.t("tab_saved"))
-        self.tree.heading("Website", text=lang.t("col_website"))
-        self.tree.heading("Email", text=lang.t("col_email"))
+        self.tree.heading("Website",  text=lang.t("col_website"))
+        self.tree.heading("Email",    text=lang.t("col_email"))
         self.tree.heading("Password", text=lang.t("col_password"))
         self.btn_delete.config(text=lang.t("btn_delete_selected"))
 
@@ -48,7 +59,7 @@ class SavedTab:
         self._password_map.clear()
 
         for website, email, password in fetch_all():
-            item_id = self.tree.insert("", "end", values=(website, email, "***"))
+            item_id = self.tree.insert("", "end", values=(website, email, "•••••••"))
             self._password_map[item_id] = password
 
     def _delete_selected(self) -> None:

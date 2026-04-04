@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
 import locales as lang
-from styles.button_style import ButtonStyle
+from styles.theme import BG, TEXT_MUTED, FONT
 
 
 class SettingsTab:
@@ -14,10 +14,16 @@ class SettingsTab:
 
     def _build(self, parent: ttk.Frame) -> None:
         wrapper = ttk.Frame(parent)
-        wrapper.pack(expand=True)
+        wrapper.place(relx=0.5, rely=0, anchor="n", y=20)
 
-        self.lbl_language = tk.Label(wrapper, text=lang.t("label_language"), font=("Arial", 10, "bold"))
-        self.lbl_language.grid(row=0, column=0, padx=10, pady=20, sticky="e")
+        self.lbl_language = tk.Label(
+            wrapper,
+            text=lang.t("label_language"),
+            font=(FONT, 10),
+            bg=BG,
+            fg=TEXT_MUTED,
+        )
+        self.lbl_language.grid(row=0, column=0, padx=(0, 12), pady=8, sticky="e")
 
         self._lang_var = tk.StringVar(value=lang.LANGUAGES[lang.current_lang()])
         self.lang_combo = ttk.Combobox(
@@ -25,9 +31,10 @@ class SettingsTab:
             textvariable=self._lang_var,
             values=list(lang.LANGUAGES.values()),
             state="readonly",
-            width=22,
+            width=24,
+            font=(FONT, 10),
         )
-        self.lang_combo.grid(row=0, column=1, padx=10, pady=20, sticky="w")
+        self.lang_combo.grid(row=0, column=1, pady=8, ipady=4, sticky="w")
         self.lang_combo.bind("<<ComboboxSelected>>", self._on_language_change)
 
     def _on_language_change(self, _event=None) -> None:

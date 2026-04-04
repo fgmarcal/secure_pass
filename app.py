@@ -1,7 +1,9 @@
 import tkinter as tk
-from tkinter import ttk, Canvas, PhotoImage, messagebox
+from tkinter import Canvas, PhotoImage, messagebox
 from pathlib import Path
 import locales as lang
+from styles.theme import apply_theme, BG
+from styles.rounded_notebook import RoundedNotebook
 from tabs.main_tab import MainTab
 from tabs.saved_tab import SavedTab
 from tabs.settings_tab import SettingsTab
@@ -17,8 +19,9 @@ def main():
 
     window = tk.Tk()
     window.title(lang.t("app_title"))
-    window.geometry("600x600")
+    window.geometry("520x600")
     window.withdraw()
+    apply_theme(window)
 
     if not prompt_master_password(window):
         messagebox.showwarning(
@@ -30,19 +33,19 @@ def main():
 
     window.deiconify()
 
-    canvas = Canvas(window, width=100, height=100)
+    canvas = Canvas(window, width=80, height=80, bg=BG, highlightthickness=0)
     logo_image = PhotoImage(file=str(ASSETS_DIR / "logo.png"))
     logo_image_resized = logo_image.subsample(2, 2)
-    canvas.create_image(50, 50, image=logo_image_resized)
-    canvas.pack()
+    canvas.create_image(40, 40, image=logo_image_resized)
+    canvas.pack(pady=(12, 0))
 
-    tab_control = ttk.Notebook(window)
+    tab_control = RoundedNotebook(window)
 
     saved_tab = SavedTab(tab_control)
     MainTab(tab_control, saved_tab)
     SettingsTab(tab_control)
 
-    tab_control.pack(expand=1, fill="both")
+    tab_control.pack(expand=1, fill="both", padx=0, pady=(8, 0))
 
     window.mainloop()
 

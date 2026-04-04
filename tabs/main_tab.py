@@ -2,6 +2,7 @@ from __future__ import annotations
 import tkinter as tk
 from tkinter import ttk, END, messagebox
 import locales as lang
+from styles.theme import BG, TEXT_MUTED, FONT
 from styles.button_style import ButtonStyle
 from utils.utils import password_generator, validate_entries
 from database.database import save_to_db
@@ -22,29 +23,33 @@ class MainTab:
 
     def _build(self, parent: ttk.Frame) -> None:
         inner = ttk.Frame(parent)
-        inner.place(relx=0.5, rely=0, anchor="n", y=15)
+        inner.place(relx=0.5, rely=0, anchor="n", y=20)
 
-        self.lbl_website = tk.Label(inner, text=lang.t("label_website"), font=("Arial", 10, "bold"))
-        self.lbl_website.grid(row=0, column=0, sticky="e", padx=(0, 8), pady=6)
+        label_cfg = dict(font=(FONT, 10), bg=BG, fg=TEXT_MUTED)
 
-        self.lbl_email = tk.Label(inner, text=lang.t("label_email"), font=("Arial", 10, "bold"))
-        self.lbl_email.grid(row=1, column=0, sticky="e", padx=(0, 8), pady=6)
+        self.lbl_website = tk.Label(inner, text=lang.t("label_website"), **label_cfg)
+        self.lbl_website.grid(row=0, column=0, sticky="e", padx=(0, 10), pady=8)
 
-        self.lbl_password = tk.Label(inner, text=lang.t("label_password"), font=("Arial", 10, "bold"))
-        self.lbl_password.grid(row=2, column=0, sticky="e", padx=(0, 8), pady=6)
+        self.lbl_email = tk.Label(inner, text=lang.t("label_email"), **label_cfg)
+        self.lbl_email.grid(row=1, column=0, sticky="e", padx=(0, 10), pady=8)
 
-        self.website_entry = tk.Entry(inner, width=30)
-        self.website_entry.grid(row=0, column=1, columnspan=2, sticky="w", pady=6)
+        self.lbl_password = tk.Label(inner, text=lang.t("label_password"), **label_cfg)
+        self.lbl_password.grid(row=2, column=0, sticky="e", padx=(0, 10), pady=8)
+
+        entry_cfg = dict(width=28, font=(FONT, 10))
+
+        self.website_entry = tk.Entry(inner, **entry_cfg)
+        self.website_entry.grid(row=0, column=1, columnspan=2, sticky="w", pady=8, ipady=5)
         self.website_entry.focus()
 
-        self.email_entry = tk.Entry(inner, width=30)
-        self.email_entry.grid(row=1, column=1, columnspan=2, sticky="w", pady=6)
+        self.email_entry = tk.Entry(inner, **entry_cfg)
+        self.email_entry.grid(row=1, column=1, columnspan=2, sticky="w", pady=8, ipady=5)
 
-        self.password_entry = tk.Entry(inner, width=30, show="*")
-        self.password_entry.grid(row=2, column=1, columnspan=2, sticky="w", pady=6)
+        self.password_entry = tk.Entry(inner, show="*", **entry_cfg)
+        self.password_entry.grid(row=2, column=1, columnspan=2, sticky="w", pady=8, ipady=5)
 
         btn_frame = ttk.Frame(inner)
-        btn_frame.grid(row=3, column=0, columnspan=3, pady=(14, 0))
+        btn_frame.grid(row=3, column=0, columnspan=3, pady=(18, 0))
 
         self.btn_clear = ButtonStyle(btn_frame, text=lang.t("btn_clear"), command=self._clear_fields)
         self.btn_clear.pack(side="left", padx=6)

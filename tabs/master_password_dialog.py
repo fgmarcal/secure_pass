@@ -1,7 +1,40 @@
 import tkinter as tk
 from tkinter import messagebox
 import locales as lang
+from styles.theme import BG, TEXT, TEXT_MUTED, ACCENT, ACCENT_HOV, ENTRY_BG, BORDER, FONT
 from database.crypto import init_crypto, SALT_FILE
+
+
+def _styled_entry(parent: tk.Widget, **kwargs) -> tk.Entry:
+    return tk.Entry(
+        parent,
+        font=(FONT, 11),
+        bg=ENTRY_BG,
+        fg=TEXT,
+        insertbackground=TEXT,
+        relief="flat",
+        highlightthickness=1,
+        highlightbackground=BORDER,
+        highlightcolor=ACCENT,
+        **kwargs,
+    )
+
+
+def _styled_button(parent: tk.Widget, **kwargs) -> tk.Button:
+    return tk.Button(
+        parent,
+        font=(FONT, 10, "bold"),
+        bg=ACCENT,
+        fg=TEXT,
+        activebackground=ACCENT_HOV,
+        activeforeground=TEXT,
+        relief="flat",
+        bd=0,
+        padx=20,
+        pady=8,
+        cursor="hand2",
+        **kwargs,
+    )
 
 
 def prompt_master_password(root: tk.Tk) -> bool:
@@ -14,26 +47,37 @@ def prompt_master_password(root: tk.Tk) -> bool:
 
     dialog = tk.Toplevel(root)
     dialog.title(lang.t("master_pwd_dialog_title"))
+    dialog.configure(bg=BG)
     dialog.resizable(False, False)
     dialog.grab_set()
 
-    label_text = (
-        lang.t("master_pwd_create_label") if is_first_launch
-        else lang.t("master_pwd_enter_label")
-    )
-    tk.Label(dialog, text=label_text, font=("Arial", 10, "bold"), pady=10).pack(padx=20)
+    padding = dict(padx=32)
+
+    tk.Label(
+        dialog,
+        text=lang.t("master_pwd_create_label") if is_first_launch else lang.t("master_pwd_enter_label"),
+        font=(FONT, 11),
+        bg=BG,
+        fg=TEXT_MUTED,
+    ).pack(pady=(28, 8), **padding)
 
     password_var = tk.StringVar()
-    entry = tk.Entry(dialog, textvariable=password_var, show="*", width=30)
-    entry.pack(padx=20, pady=(0, 5))
+    entry = _styled_entry(dialog, textvariable=password_var, show="*", width=30)
+    entry.pack(ipady=6, **padding)
     entry.focus()
 
     confirm_var = tk.StringVar()
-    confirm_label = tk.Label(dialog, text=lang.t("master_pwd_confirm_label"), font=("Arial", 10, "bold"))
-    confirm_entry = tk.Entry(dialog, textvariable=confirm_var, show="*", width=30)
+    confirm_label = tk.Label(
+        dialog,
+        text=lang.t("master_pwd_confirm_label"),
+        font=(FONT, 11),
+        bg=BG,
+        fg=TEXT_MUTED,
+    )
+    confirm_entry = _styled_entry(dialog, textvariable=confirm_var, show="*", width=30)
     if is_first_launch:
-        confirm_label.pack(padx=20, pady=(5, 0))
-        confirm_entry.pack(padx=20, pady=(0, 5))
+        confirm_label.pack(pady=(14, 8), **padding)
+        confirm_entry.pack(ipady=6, **padding)
 
     result = {"ok": False}
 
@@ -60,10 +104,11 @@ def prompt_master_password(root: tk.Tk) -> bool:
     def on_cancel():
         dialog.destroy()
 
-    btn_frame = tk.Frame(dialog)
-    btn_frame.pack(pady=10)
-    tk.Button(btn_frame, text=lang.t("btn_ok"), width=10, command=on_submit).pack(side="left", padx=5)
-    tk.Button(btn_frame, text=lang.t("btn_cancel"), width=10, command=on_cancel).pack(side="left", padx=5)
+    btn_frame = tk.Frame(dialog, bg=BG)
+    btn_frame.pack(pady=(20, 28))
+
+    _styled_button(btn_frame, text=lang.t("btn_ok"),     command=on_submit).pack(side="left", padx=6)
+    _styled_button(btn_frame, text=lang.t("btn_cancel"), command=on_cancel).pack(side="left", padx=6)
 
     dialog.bind("<Return>", lambda e: on_submit())
     dialog.bind("<Escape>", lambda e: on_cancel())
