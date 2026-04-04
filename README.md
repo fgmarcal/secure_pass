@@ -15,7 +15,7 @@ A desktop password manager built with Python and Tkinter. Passwords are encrypte
 
 ## Requirements
 
-- Python 3.10 or newer
+- Python 3.11.7 or newer
 - `tkinter` (usually bundled with Python; see note below)
 
 > **Linux note:** if `tkinter` is missing, install it with your package manager:
