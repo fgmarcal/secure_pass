@@ -1,12 +1,17 @@
+from __future__ import annotations
 import tkinter as tk
 from tkinter import ttk, END, messagebox
 from styles.button_style import ButtonStyle
 from utils.utils import password_generator, validate_entries
 from database.database import save_to_db
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from tabs.saved_tab import SavedTab
 
 
 class MainTab:
-    def __init__(self, tab_control: ttk.Notebook, saved_tab) -> None:
+    def __init__(self, tab_control: ttk.Notebook, saved_tab: SavedTab) -> None:
         self.saved_tab = saved_tab
         self.frame = ttk.Frame(tab_control)
         tab_control.add(self.frame, text="Main")
@@ -38,7 +43,7 @@ class MainTab:
         email = self.email_entry.get()
         password = self.password_entry.get()
 
-        if not validate_entries(website=website, email=email, password=password):
+        if not validate_entries(website, email, password):
             messagebox.showwarning("Vazio?", "Preencha todos os campos.")
             return
 

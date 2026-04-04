@@ -1,9 +1,12 @@
 import tkinter as tk
 from tkinter import ttk, Canvas, PhotoImage, messagebox
+from pathlib import Path
 from tabs.main_tab import MainTab
 from tabs.saved_tab import SavedTab
 from tabs.master_password_dialog import prompt_master_password
 from database.database import init_db
+
+ASSETS_DIR = Path(__file__).parent / "assets"
 
 
 def main():
@@ -22,7 +25,7 @@ def main():
     window.deiconify()
 
     canvas = Canvas(window, width=100, height=100)
-    logo_image = PhotoImage(file="assets/logo.png")
+    logo_image = PhotoImage(file=str(ASSETS_DIR / "logo.png"))
     logo_image_resized = logo_image.subsample(2, 2)
     canvas.create_image(50, 50, image=logo_image_resized)
     canvas.pack()

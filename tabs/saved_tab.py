@@ -7,6 +7,7 @@ from database.database import fetch_all, delete_from_db
 
 class SavedTab:
     def __init__(self, tab_control: ttk.Notebook) -> None:
+        self._password_map: dict[str, str] = {}
         self.frame = ttk.Frame(tab_control)
         tab_control.add(self.frame, text="Saved")
         self._build(self.frame)
@@ -33,8 +34,11 @@ class SavedTab:
         """Atualiza a tabela com os dados do banco de dados."""
         for row in self.tree.get_children():
             self.tree.delete(row)
+        self._password_map.clear()
+
         for website, email, password in fetch_all():
-            self.tree.insert("", "end", values=(website, email, "***", password))
+            item_id = self.tree.insert("", "end", values=(website, email, "***"))
+            self._password_map[item_id] = password
 
     def _delete_selected(self) -> None:
         """Deleta a linha selecionada."""
@@ -43,7 +47,8 @@ class SavedTab:
             messagebox.showwarning("Atenção", "Selecione um item para excluir.")
             return
 
-        values = self.tree.item(selected_item, "values")
+        item_id = selected_item[0]
+        values = self.tree.item(item_id, "values")
         website, email = values[0], values[1]
 
         if not messagebox.askyesno("Delete", f"Tem certeza que deseja excluir a senha de {website}?"):
@@ -51,6 +56,7 @@ class SavedTab:
 
         try:
             delete_from_db(website, email)
+            self._password_map.pop(item_id, None)
             self.update_table()
         except Exception as e:
             print(f"Ocorreu um erro: {e}")
@@ -61,10 +67,18 @@ class SavedTab:
     def _on_item_click(self, event) -> None:
         """Copia a senha ao dar duplo clique na linha da tabela."""
         selected_item = self.tree.selection()
-        if selected_item:
-            values = self.tree.item(selected_item, "values")
-            try:
-                copy_to_clipboard(self.tree, values[3])
-                messagebox.showinfo("Success", "Password copiado para a área de transferência.")
-            except Exception:
-                messagebox.showerror("Erro", "Não foi possível copiar a senha.")
+        if not selected_item:
+            return
+
+        item_id = selected_item[0]
+        password = self._password_map.get(item_id)
+        if password is None:
+            messagebox.showerror("Erro", "Senha não encontrada.")
+            return
+
+        try:
+            copy_to_clipboard(self.tree, password)
+            messagebox.showinfo("Success", "Password copiado para a área de transferência.")
+        except Exception:
+            messagebox.showerror("Erro", "Não foi possível copiar a senha.")
+

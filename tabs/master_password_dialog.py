@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import messagebox
-from database.crypto import init_crypto, is_initialised, SALT_FILE
+from database.crypto import init_crypto, SALT_FILE
 
 
 def prompt_master_password(root: tk.Tk) -> bool:
@@ -27,13 +27,12 @@ def prompt_master_password(root: tk.Tk) -> bool:
     entry.pack(padx=20, pady=(0, 5))
     entry.focus()
 
+    confirm_var = tk.StringVar()
+    confirm_label = tk.Label(dialog, text="Confirm master password:", font=("Arial", 10, "bold"))
+    confirm_entry = tk.Entry(dialog, textvariable=confirm_var, show="*", width=30)
     if is_first_launch:
-        tk.Label(dialog, text="Confirm master password:", font=("Arial", 10, "bold")).pack(padx=20, pady=(5, 0))
-        confirm_var = tk.StringVar()
-        confirm_entry = tk.Entry(dialog, textvariable=confirm_var, show="*", width=30)
+        confirm_label.pack(padx=20, pady=(5, 0))
         confirm_entry.pack(padx=20, pady=(0, 5))
-    else:
-        confirm_var = None
 
     result = {"ok": False}
 
@@ -42,10 +41,9 @@ def prompt_master_password(root: tk.Tk) -> bool:
         if not pwd:
             messagebox.showwarning("Aviso", "A senha não pode ser vazia.", parent=dialog)
             return
-        if is_first_launch:
-            if pwd != confirm_var.get():
-                messagebox.showerror("Erro", "As senhas não coincidem.", parent=dialog)
-                return
+        if is_first_launch and pwd != confirm_var.get():
+            messagebox.showerror("Erro", "As senhas não coincidem.", parent=dialog)
+            return
         init_crypto(pwd)
         result["ok"] = True
         dialog.destroy()

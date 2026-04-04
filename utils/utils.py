@@ -25,10 +25,5 @@ def password_generator() -> str:
     return "".join(password_list)
 
 
-def validate_entries(**kw) -> bool:
-    website_value = kw.get("website")
-    email_value = kw.get("email")
-    password_value = kw.get("password")
-    if len(website_value) == 0 or len(email_value) == 0 or len(password_value) == 0:
-        return False
-    return True
+def validate_entries(website: str, email: str, password: str) -> bool:
+    return bool(website and email and password)

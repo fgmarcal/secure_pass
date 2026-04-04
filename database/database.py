@@ -4,7 +4,7 @@ from database.crypto import encrypt_password, decrypt_password
 
 DB_NAME = Path(__file__).parent / "data.db"
 
-def init_db():
+def init_db() -> None:
     """Cria o banco de dados e a tabela caso não existam."""
     with sqlite3.connect(DB_NAME) as conn:
         cursor = conn.cursor()
@@ -18,7 +18,7 @@ def init_db():
         """)
         conn.commit()
 
-def save_to_db(website, email, password):
+def save_to_db(website: str, email: str, password: str) -> None:
     """Salva os dados no banco de dados SQLite com a senha encriptada."""
     encrypted = encrypt_password(password)
     with sqlite3.connect(DB_NAME) as conn:
@@ -26,7 +26,7 @@ def save_to_db(website, email, password):
         cursor.execute("INSERT INTO data (website, email, password) VALUES (?, ?, ?)", (website, email, encrypted))
         conn.commit()
 
-def fetch_all():
+def fetch_all() -> list[tuple[str, str, str]]:
     """Retorna todos os registros do banco de dados com as senhas desencriptadas."""
     with sqlite3.connect(DB_NAME) as conn:
         cursor = conn.cursor()
@@ -34,7 +34,7 @@ def fetch_all():
         rows = cursor.fetchall()
     return [(website, email, decrypt_password(pwd)) for website, email, pwd in rows]
 
-def delete_from_db(website, email):
+def delete_from_db(website: str, email: str) -> None:
     """Exclui um registro do banco de dados."""
     with sqlite3.connect(DB_NAME) as conn:
         cursor = conn.cursor()
