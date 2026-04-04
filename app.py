@@ -17,7 +17,7 @@ def main():
 
     window = tk.Tk()
     window.title(lang.t("app_title"))
-    window.geometry("500x500")
+    window.geometry("600x600")
     window.withdraw()
 
     if not prompt_master_password(window):
