@@ -8,6 +8,8 @@ STRINGS = {
     "master_pwd_warning_empty_msg": "A senha não pode ser vazia.",
     "master_pwd_error_mismatch_title": "Erro",
     "master_pwd_error_mismatch_msg": "As senhas não coincidem.",
+    "master_pwd_error_invalid_title": "Erro",
+    "master_pwd_error_invalid_msg": "Senha mestre inválida.",
 
     # Shared buttons
     "btn_ok": "OK",
@@ -45,6 +47,9 @@ STRINGS = {
     "success_delete_msg": "Senha excluída com sucesso.",
     "error_pwd_not_found_title": "Erro",
     "error_pwd_not_found_msg": "Senha não encontrada.",
+    "error_pwd_unreadable_title": "Erro",
+    "error_pwd_unreadable_msg": "Esta senha não pode ser descriptografada com a senha mestre atual.",
+    "pwd_unavailable_marker": "[indisponível]",
     "success_copy_title": "Sucesso",
     "success_copy_msg": "Senha copiada para a área de transferência.",
     "error_copy_title": "Erro",

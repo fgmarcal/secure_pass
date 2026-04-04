@@ -2,7 +2,18 @@ import tkinter as tk
 from tkinter import messagebox
 import locales as lang
 from styles.theme import BG, TEXT, TEXT_MUTED, ACCENT, ACCENT_HOV, ENTRY_BG, BORDER, FONT
-from database.crypto import init_crypto, SALT_FILE
+from database.crypto import (
+    SALT_FILE,
+    create_master_verifier,
+    init_crypto,
+    verify_master_password,
+)
+from database.database import (
+    get_master_verifier,
+    has_any_decryptable_password,
+    has_saved_passwords,
+    set_master_verifier,
+)
 
 
 def _styled_entry(parent: tk.Widget, **kwargs) -> tk.Entry:
@@ -43,7 +54,8 @@ def prompt_master_password(root: tk.Tk) -> bool:
     Returns True if the password was accepted, False if the user cancelled.
     On first launch (no salt file yet), the entered password becomes the master password.
     """
-    is_first_launch = not SALT_FILE.exists()
+    stored_verifier = get_master_verifier()
+    is_first_launch = not SALT_FILE.exists() and not stored_verifier
 
     dialog = tk.Toplevel(root)
     dialog.title(lang.t("master_pwd_dialog_title"))
@@ -97,7 +109,35 @@ def prompt_master_password(root: tk.Tk) -> bool:
                 parent=dialog,
             )
             return
+
         init_crypto(pwd)
+
+        if stored_verifier:
+            if not verify_master_password(stored_verifier):
+                messagebox.showerror(
+                    lang.t("master_pwd_error_invalid_title"),
+                    lang.t("master_pwd_error_invalid_msg"),
+                    parent=dialog,
+                )
+                password_var.set("")
+                confirm_var.set("")
+                entry.focus()
+                return
+        else:
+            # Upgrade path: if legacy data exists, require at least one successful
+            # decrypt before trusting this password and persisting a verifier.
+            if has_saved_passwords() and not has_any_decryptable_password():
+                messagebox.showerror(
+                    lang.t("master_pwd_error_invalid_title"),
+                    lang.t("master_pwd_error_invalid_msg"),
+                    parent=dialog,
+                )
+                password_var.set("")
+                confirm_var.set("")
+                entry.focus()
+                return
+            set_master_verifier(create_master_verifier())
+
         result["ok"] = True
         dialog.destroy()
 

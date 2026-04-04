@@ -8,6 +8,8 @@ STRINGS = {
     "master_pwd_warning_empty_msg": "Password cannot be empty.",
     "master_pwd_error_mismatch_title": "Error",
     "master_pwd_error_mismatch_msg": "Passwords do not match.",
+    "master_pwd_error_invalid_title": "Error",
+    "master_pwd_error_invalid_msg": "Invalid master password.",
 
     # Shared buttons
     "btn_ok": "OK",
@@ -45,6 +47,9 @@ STRINGS = {
     "success_delete_msg": "Password deleted successfully.",
     "error_pwd_not_found_title": "Error",
     "error_pwd_not_found_msg": "Password not found.",
+    "error_pwd_unreadable_title": "Error",
+    "error_pwd_unreadable_msg": "This password cannot be decrypted with the current master password.",
+    "pwd_unavailable_marker": "[unavailable]",
     "success_copy_title": "Success",
     "success_copy_msg": "Password copied to clipboard.",
     "error_copy_title": "Error",

@@ -3,6 +3,7 @@ from pathlib import Path
 from database.crypto import encrypt_password, decrypt_password
 
 DB_NAME = Path(__file__).parent / "data.db"
+MASTER_VERIFIER_KEY = "master_verifier"
 
 def init_db() -> None:
     """Creates the database and tables if they do not exist."""
@@ -44,6 +45,43 @@ def set_setting(key: str, value: str) -> None:
         )
         conn.commit()
 
+
+def get_master_verifier() -> str:
+    """Returns the encrypted master-password verifier token, if present."""
+    return get_setting(MASTER_VERIFIER_KEY, "")
+
+
+def set_master_verifier(verifier_token: str) -> None:
+    """Persists the encrypted master-password verifier token."""
+    set_setting(MASTER_VERIFIER_KEY, verifier_token)
+
+
+def has_saved_passwords() -> bool:
+    """Returns True when there is at least one credential row."""
+    with sqlite3.connect(DB_NAME) as conn:
+        cursor = conn.cursor()
+        cursor.execute("SELECT 1 FROM data LIMIT 1")
+        return cursor.fetchone() is not None
+
+
+def has_any_decryptable_password() -> bool:
+    """
+    Returns True when at least one encrypted password can be decrypted with the
+    currently initialised key.
+    """
+    with sqlite3.connect(DB_NAME) as conn:
+        cursor = conn.cursor()
+        cursor.execute("SELECT password FROM data")
+        rows = cursor.fetchall()
+    for (encrypted_password,) in rows:
+        try:
+            decrypt_password(encrypted_password)
+            return True
+        except ValueError:
+            continue
+    return False
+
+
 def save_to_db(website: str, email: str, password: str) -> None:
     """Saves data to the SQLite database with the password encrypted."""
     encrypted = encrypt_password(password)
@@ -52,13 +90,20 @@ def save_to_db(website: str, email: str, password: str) -> None:
         cursor.execute("INSERT INTO data (website, email, password) VALUES (?, ?, ?)", (website, email, encrypted))
         conn.commit()
 
-def fetch_all() -> list[tuple[int, str, str, str]]:
+def fetch_all() -> list[tuple[int, str, str, str | None]]:
     """Returns all records from the database with passwords decrypted."""
     with sqlite3.connect(DB_NAME) as conn:
         cursor = conn.cursor()
         cursor.execute("SELECT id, website, email, password FROM data")
         rows = cursor.fetchall()
-    return [(row_id, website, email, decrypt_password(pwd)) for row_id, website, email, pwd in rows]
+    decrypted_rows: list[tuple[int, str, str, str | None]] = []
+    for row_id, website, email, encrypted_password in rows:
+        try:
+            decrypted = decrypt_password(encrypted_password)
+        except ValueError:
+            decrypted = None
+        decrypted_rows.append((row_id, website, email, decrypted))
+    return decrypted_rows
 
 def delete_from_db(row_id: int) -> None:
     """Deletes a record from the database."""

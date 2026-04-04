@@ -11,7 +11,7 @@ class SavedTab:
     def __init__(self, tab_control: ttk.Notebook) -> None:
         self.tab_control = tab_control
         self._row_id_map: dict[str, int] = {}
-        self._password_map: dict[str, str] = {}
+        self._password_map: dict[str, str | None] = {}
         self.frame = ttk.Frame(tab_control)
         tab_control.add(self.frame, text=lang.t("tab_saved"))
         self._build(self.frame)
@@ -61,7 +61,8 @@ class SavedTab:
         self._password_map.clear()
 
         for row_id, website, email, password in fetch_all():
-            item_id = self.tree.insert("", "end", values=(website, email, "•••••••"))
+            displayed_password = "•••••••" if password is not None else lang.t("pwd_unavailable_marker")
+            item_id = self.tree.insert("", "end", values=(website, email, displayed_password))
             self._row_id_map[item_id] = row_id
             self._password_map[item_id] = password
 
@@ -107,7 +108,7 @@ class SavedTab:
         item_id = selected_item[0]
         password = self._password_map.get(item_id)
         if password is None:
-            messagebox.showerror(lang.t("error_pwd_not_found_title"), lang.t("error_pwd_not_found_msg"))
+            messagebox.showerror(lang.t("error_pwd_unreadable_title"), lang.t("error_pwd_unreadable_msg"))
             return
 
         try:

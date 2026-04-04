@@ -6,6 +6,7 @@ from cryptography.hazmat.primitives import hashes
 from cryptography.fernet import Fernet, InvalidToken
 
 SALT_FILE = Path(__file__).parent / "salt.key"
+MASTER_VERIFIER_PAYLOAD = "secure-pass-verifier-v1"
 
 _fernet: Fernet | None = None
 
@@ -43,8 +44,26 @@ def decrypt_password(token: str) -> str:
         raise RuntimeError("Crypto not initialised. Call init_crypto() first.")
     try:
         return _fernet.decrypt(token.encode()).decode()
-    except InvalidToken:
-        return "[decryption failed]"
+    except InvalidToken as exc:
+        raise ValueError("Password decryption failed.") from exc
+
+
+def create_master_verifier() -> str:
+    """Returns an encrypted verifier token for the current derived key."""
+    if _fernet is None:
+        raise RuntimeError("Crypto not initialised. Call init_crypto() first.")
+    return _fernet.encrypt(MASTER_VERIFIER_PAYLOAD.encode()).decode()
+
+
+def verify_master_password(verifier_token: str) -> bool:
+    """Checks if the current derived key can decrypt the stored verifier token."""
+    if _fernet is None:
+        raise RuntimeError("Crypto not initialised. Call init_crypto() first.")
+    try:
+        payload = _fernet.decrypt(verifier_token.encode()).decode()
+    except (InvalidToken, UnicodeDecodeError):
+        return False
+    return payload == MASTER_VERIFIER_PAYLOAD
 
 
 def is_initialised() -> bool:

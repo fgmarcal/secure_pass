@@ -8,6 +8,8 @@ STRINGS = {
     "master_pwd_warning_empty_msg": "La contraseña no puede estar vacía.",
     "master_pwd_error_mismatch_title": "Error",
     "master_pwd_error_mismatch_msg": "Las contraseñas no coinciden.",
+    "master_pwd_error_invalid_title": "Error",
+    "master_pwd_error_invalid_msg": "Contraseña maestra inválida.",
 
     # Shared buttons
     "btn_ok": "Aceptar",
@@ -45,6 +47,9 @@ STRINGS = {
     "success_delete_msg": "Contraseña eliminada con éxito.",
     "error_pwd_not_found_title": "Error",
     "error_pwd_not_found_msg": "Contraseña no encontrada.",
+    "error_pwd_unreadable_title": "Error",
+    "error_pwd_unreadable_msg": "Esta contraseña no se puede descifrar con la contraseña maestra actual.",
+    "pwd_unavailable_marker": "[no disponible]",
     "success_copy_title": "Éxito",
     "success_copy_msg": "Contraseña copiada al portapapeles.",
     "error_copy_title": "Error",
