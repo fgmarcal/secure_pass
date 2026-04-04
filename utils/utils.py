@@ -1,4 +1,5 @@
-import random
+import secrets
+import string
 import tkinter as tk
 
 def copy_password(password):
@@ -10,17 +11,17 @@ def copy_password(password):
     root.update()
 
 def password_generator():
-    letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-    numbers = "0123456789"
-    symbols = "!#$%&()*+"
+    letters = string.ascii_letters
+    numbers = string.digits
+    symbols = string.punctuation
 
     password_list = (
-        random.choices(letters, k=random.randint(8, 10)) +
-        random.choices(symbols, k=random.randint(2, 4)) +
-        random.choices(numbers, k=random.randint(2, 4))
+        [secrets.choice(letters) for _ in range(secrets.randbelow(3) + 8)] +
+        [secrets.choice(symbols) for _ in range(secrets.randbelow(3) + 2)] +
+        [secrets.choice(numbers) for _ in range(secrets.randbelow(3) + 2)]
     )
 
-    random.shuffle(password_list)
+    secrets.SystemRandom().shuffle(password_list)
     return "".join(password_list)
 
 def validate_entries(**kw):
