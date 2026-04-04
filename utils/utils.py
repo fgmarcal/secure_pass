@@ -2,15 +2,15 @@ import secrets
 import string
 import tkinter as tk
 
-def copy_password(password):
-    """Copia a senha para o clipboard."""
-    root = tk.Tk()
-    root.withdraw()
-    root.clipboard_clear()
-    root.clipboard_append(password)
-    root.update()
 
-def password_generator():
+def copy_to_clipboard(widget: tk.Misc, password: str) -> None:
+    """Copia a senha para a área de transferência usando o widget Tk existente."""
+    widget.clipboard_clear()
+    widget.clipboard_append(password)
+    widget.update()
+
+
+def password_generator() -> str:
     letters = string.ascii_letters
     numbers = string.digits
     symbols = string.punctuation
@@ -24,7 +24,8 @@ def password_generator():
     secrets.SystemRandom().shuffle(password_list)
     return "".join(password_list)
 
-def validate_entries(**kw):
+
+def validate_entries(**kw) -> bool:
     website_value = kw.get("website")
     email_value = kw.get("email")
     password_value = kw.get("password")

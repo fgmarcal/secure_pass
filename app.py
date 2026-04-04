@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import ttk, Canvas, PhotoImage, messagebox
-from tabs.main_tab import create_main_tab
-from tabs.saved_tab import create_saved_tab
+from tabs.main_tab import MainTab
+from tabs.saved_tab import SavedTab
 from tabs.master_password_dialog import prompt_master_password
 from database.database import init_db
 
@@ -29,8 +29,8 @@ def main():
 
     tab_control = ttk.Notebook(window)
 
-    create_main_tab(tab_control)
-    create_saved_tab(tab_control)
+    saved_tab = SavedTab(tab_control)
+    MainTab(tab_control, saved_tab)
 
     tab_control.pack(expand=1, fill="both")
 
