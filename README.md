@@ -1,4 +1,4 @@
-# Password Manager
+# Secure Pass: Password Manager
 
 A desktop password manager built with Python and Tkinter. Passwords are encrypted at rest using a master password — nothing is stored in plain text.
 
@@ -33,8 +33,8 @@ A desktop password manager built with Python and Tkinter. Passwords are encrypte
 ### Automatic (Linux)
 
 ```bash
-git clone https://github.com/your-username/password-manager.git
-cd password-manager
+git clone https://github.com/fgmarcal/secure_pass.git
+cd secure_pass
 chmod +x install_dependencies.sh run.sh
 ./install_dependencies.sh
 ```
@@ -42,8 +42,8 @@ chmod +x install_dependencies.sh run.sh
 ### Manual
 
 ```bash
-git clone https://github.com/your-username/password-manager.git
-cd password-manager
+git clone https://github.com/fgmarcal/secure_pass.git
+cd secure_pass
 python3 -m venv venv
 venv/bin/pip install -r requirements.txt
 ```
