@@ -16,7 +16,7 @@ STRINGS = {
     "btn_cancel": "Cancel",
 
     # App level
-    "app_title": "Password Manager",
+    "app_title": "Secure Pass: Password Manager",
     "app_warning_master_required_title": "Warning",
     "app_warning_master_required_msg": "Master password required. The program will now exit.",
 

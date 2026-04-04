@@ -16,7 +16,7 @@ STRINGS = {
     "btn_cancel": "Cancelar",
 
     # App level
-    "app_title": "Gestor de Contraseñas",
+    "app_title": "Secure Pass: Gestor de Contraseñas",
     "app_warning_master_required_title": "Advertencia",
     "app_warning_master_required_msg": "Se requiere contraseña maestra. El programa se cerrará.",
 
