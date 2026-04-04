@@ -1,0 +1,32 @@
+import tkinter as tk
+from tkinter import ttk, Canvas, PhotoImage
+from tabs.main_tab import create_main_tab
+from tabs.saved_tab import create_saved_tab
+from database.database import init_db
+
+
+def main():
+    init_db()  # Inicializa o banco de dados
+
+    window = tk.Tk()
+    window.title("Password Manager")
+    window.geometry("500x500")
+
+    canvas = Canvas(width=100, height=100)
+    logo_image = PhotoImage(file="assets/logo.png") 
+    logo_image_resized = logo_image.subsample(2, 2)
+    canvas.create_image(50, 50, image=logo_image_resized)
+    canvas.grid(row=0, column=1)
+    canvas.pack()
+
+    tab_control = ttk.Notebook(window)
+
+    create_main_tab(tab_control)
+    create_saved_tab(tab_control)
+
+    tab_control.pack(expand=1, fill="both")
+
+    window.mainloop()
+
+if __name__ == "__main__":
+    main()
