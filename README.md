@@ -69,6 +69,20 @@ venv\Scripts\python app.py        # Windows
 venv/bin/python app.py            # macOS
 ```
 
+## First Time Using the App
+
+When you open the app for the first time, you will be asked to create a master password and confirm it.
+
+1. Enter a strong master password and keep it safe.
+2. Confirm it in the second field and click `OK`.
+3. Start adding your credentials in the `Main` tab.
+4. Open the `Saved` tab to view entries and copy passwords.
+
+Important:
+- Your master password is not stored, so it cannot be recovered by the app.
+- A salt file is created at `database/salt.key` on first launch. Back up this file together with your database.
+- On future launches, you must enter the same master password to unlock existing passwords.
+
 ## Project Structure
 
 ```
