@@ -1,16 +1,25 @@
 import tkinter as tk
-from tkinter import ttk, Canvas, PhotoImage
+from tkinter import ttk, Canvas, PhotoImage, messagebox
 from tabs.main_tab import create_main_tab
 from tabs.saved_tab import create_saved_tab
+from tabs.master_password_dialog import prompt_master_password
 from database.database import init_db
 
 
 def main():
-    init_db()  # Inicializa o banco de dados
+    init_db()
 
     window = tk.Tk()
     window.title("Password Manager")
     window.geometry("500x500")
+    window.withdraw()
+
+    if not prompt_master_password(window):
+        messagebox.showwarning("Aviso", "Senha mestre necessária. O programa será encerrado.")
+        window.destroy()
+        return
+
+    window.deiconify()
 
     canvas = Canvas(width=100, height=100)
     logo_image = PhotoImage(file="assets/logo.png") 
