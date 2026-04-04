@@ -10,6 +10,7 @@ from database.database import fetch_all, delete_from_db
 class SavedTab:
     def __init__(self, tab_control: ttk.Notebook) -> None:
         self.tab_control = tab_control
+        self._row_id_map: dict[str, int] = {}
         self._password_map: dict[str, str] = {}
         self.frame = ttk.Frame(tab_control)
         tab_control.add(self.frame, text=lang.t("tab_saved"))
@@ -56,10 +57,12 @@ class SavedTab:
         """Updates the table with data from the database."""
         for row in self.tree.get_children():
             self.tree.delete(row)
+        self._row_id_map.clear()
         self._password_map.clear()
 
-        for website, email, password in fetch_all():
+        for row_id, website, email, password in fetch_all():
             item_id = self.tree.insert("", "end", values=(website, email, "•••••••"))
+            self._row_id_map[item_id] = row_id
             self._password_map[item_id] = password
 
     def _delete_selected(self) -> None:
@@ -70,8 +73,13 @@ class SavedTab:
             return
 
         item_id = selected_item[0]
+        row_id = self._row_id_map.get(item_id)
+        if row_id is None:
+            messagebox.showerror(lang.t("error_delete_title"), lang.t("error_delete_msg"))
+            return
+
         values = self.tree.item(item_id, "values")
-        website, email = values[0], values[1]
+        website = values[0]
 
         if not messagebox.askyesno(
             lang.t("confirm_delete_title"),
@@ -80,7 +88,8 @@ class SavedTab:
             return
 
         try:
-            delete_from_db(website, email)
+            delete_from_db(row_id)
+            self._row_id_map.pop(item_id, None)
             self._password_map.pop(item_id, None)
             self.update_table()
         except Exception as e:

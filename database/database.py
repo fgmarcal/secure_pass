@@ -52,17 +52,17 @@ def save_to_db(website: str, email: str, password: str) -> None:
         cursor.execute("INSERT INTO data (website, email, password) VALUES (?, ?, ?)", (website, email, encrypted))
         conn.commit()
 
-def fetch_all() -> list[tuple[str, str, str]]:
+def fetch_all() -> list[tuple[int, str, str, str]]:
     """Returns all records from the database with passwords decrypted."""
     with sqlite3.connect(DB_NAME) as conn:
         cursor = conn.cursor()
-        cursor.execute("SELECT website, email, password FROM data")
+        cursor.execute("SELECT id, website, email, password FROM data")
         rows = cursor.fetchall()
-    return [(website, email, decrypt_password(pwd)) for website, email, pwd in rows]
+    return [(row_id, website, email, decrypt_password(pwd)) for row_id, website, email, pwd in rows]
 
-def delete_from_db(website: str, email: str) -> None:
+def delete_from_db(row_id: int) -> None:
     """Deletes a record from the database."""
     with sqlite3.connect(DB_NAME) as conn:
         cursor = conn.cursor()
-        cursor.execute("DELETE FROM data WHERE website = ? AND email = ?", (website, email))
+        cursor.execute("DELETE FROM data WHERE id = ?", (row_id,))
         conn.commit()
