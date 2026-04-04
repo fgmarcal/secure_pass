@@ -5,7 +5,7 @@ from database.crypto import encrypt_password, decrypt_password
 DB_NAME = Path(__file__).parent / "data.db"
 
 def init_db() -> None:
-    """Cria o banco de dados e a tabela caso não existam."""
+    """Creates the database and table if they do not exist."""
     with sqlite3.connect(DB_NAME) as conn:
         cursor = conn.cursor()
         cursor.execute("""
@@ -19,7 +19,7 @@ def init_db() -> None:
         conn.commit()
 
 def save_to_db(website: str, email: str, password: str) -> None:
-    """Salva os dados no banco de dados SQLite com a senha encriptada."""
+    """Saves data to the SQLite database with the password encrypted."""
     encrypted = encrypt_password(password)
     with sqlite3.connect(DB_NAME) as conn:
         cursor = conn.cursor()
@@ -27,7 +27,7 @@ def save_to_db(website: str, email: str, password: str) -> None:
         conn.commit()
 
 def fetch_all() -> list[tuple[str, str, str]]:
-    """Retorna todos os registros do banco de dados com as senhas desencriptadas."""
+    """Returns all records from the database with passwords decrypted."""
     with sqlite3.connect(DB_NAME) as conn:
         cursor = conn.cursor()
         cursor.execute("SELECT website, email, password FROM data")
@@ -35,7 +35,7 @@ def fetch_all() -> list[tuple[str, str, str]]:
     return [(website, email, decrypt_password(pwd)) for website, email, pwd in rows]
 
 def delete_from_db(website: str, email: str) -> None:
-    """Exclui um registro do banco de dados."""
+    """Deletes a record from the database."""
     with sqlite3.connect(DB_NAME) as conn:
         cursor = conn.cursor()
         cursor.execute("DELETE FROM data WHERE website = ? AND email = ?", (website, email))

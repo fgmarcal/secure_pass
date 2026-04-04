@@ -34,9 +34,9 @@ class MainTab:
 
         tk.Label(parent, text="").grid(row=3, column=0)
 
-        ButtonStyle(parent, text="Limpar", command=self._clear_fields).grid(row=4, column=0)
-        ButtonStyle(parent, text="Salvar", command=self._add_entry).grid(row=4, column=1)
-        ButtonStyle(parent, text="Auto gerar!", command=self._generate_password).grid(row=4, column=2)
+        ButtonStyle(parent, text="Clear", command=self._clear_fields).grid(row=4, column=0)
+        ButtonStyle(parent, text="Save", command=self._add_entry).grid(row=4, column=1)
+        ButtonStyle(parent, text="Auto Generate!", command=self._generate_password).grid(row=4, column=2)
 
     def _add_entry(self) -> None:
         website = self.website_entry.get()
@@ -44,7 +44,7 @@ class MainTab:
         password = self.password_entry.get()
 
         if not validate_entries(website, email, password):
-            messagebox.showwarning("Vazio?", "Preencha todos os campos.")
+            messagebox.showwarning("Empty?", "Please fill in all fields.")
             return
 
         save_to_db(website, email, password)

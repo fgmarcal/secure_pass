@@ -18,7 +18,7 @@ def main():
     window.withdraw()
 
     if not prompt_master_password(window):
-        messagebox.showwarning("Aviso", "Senha mestre necessária. O programa será encerrado.")
+        messagebox.showwarning("Warning", "Master password required. The program will now exit.")
         window.destroy()
         return
 

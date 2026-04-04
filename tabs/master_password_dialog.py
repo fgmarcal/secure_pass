@@ -39,10 +39,10 @@ def prompt_master_password(root: tk.Tk) -> bool:
     def on_submit():
         pwd = password_var.get()
         if not pwd:
-            messagebox.showwarning("Aviso", "A senha não pode ser vazia.", parent=dialog)
+            messagebox.showwarning("Warning", "Password cannot be empty.", parent=dialog)
             return
         if is_first_launch and pwd != confirm_var.get():
-            messagebox.showerror("Erro", "As senhas não coincidem.", parent=dialog)
+            messagebox.showerror("Error", "Passwords do not match.", parent=dialog)
             return
         init_crypto(pwd)
         result["ok"] = True
@@ -54,7 +54,7 @@ def prompt_master_password(root: tk.Tk) -> bool:
     btn_frame = tk.Frame(dialog)
     btn_frame.pack(pady=10)
     tk.Button(btn_frame, text="OK", width=10, command=on_submit).pack(side="left", padx=5)
-    tk.Button(btn_frame, text="Cancelar", width=10, command=on_cancel).pack(side="left", padx=5)
+    tk.Button(btn_frame, text="Cancel", width=10, command=on_cancel).pack(side="left", padx=5)
 
     dialog.bind("<Return>", lambda e: on_submit())
     dialog.bind("<Escape>", lambda e: on_cancel())

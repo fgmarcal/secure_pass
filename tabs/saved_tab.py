@@ -31,7 +31,7 @@ class SavedTab:
         ButtonStyle(parent, text="Delete Selected", command=self._delete_selected).pack(pady=5)
 
     def update_table(self) -> None:
-        """Atualiza a tabela com os dados do banco de dados."""
+        """Updates the table with data from the database."""
         for row in self.tree.get_children():
             self.tree.delete(row)
         self._password_map.clear()
@@ -41,17 +41,17 @@ class SavedTab:
             self._password_map[item_id] = password
 
     def _delete_selected(self) -> None:
-        """Deleta a linha selecionada."""
+        """Deletes the selected row."""
         selected_item = self.tree.selection()
         if not selected_item:
-            messagebox.showwarning("Atenção", "Selecione um item para excluir.")
+            messagebox.showwarning("Warning", "Please select an item to delete.")
             return
 
         item_id = selected_item[0]
         values = self.tree.item(item_id, "values")
         website, email = values[0], values[1]
 
-        if not messagebox.askyesno("Delete", f"Tem certeza que deseja excluir a senha de {website}?"):
+        if not messagebox.askyesno("Delete", f"Are you sure you want to delete the password for {website}?"):
             return
 
         try:
@@ -59,13 +59,13 @@ class SavedTab:
             self._password_map.pop(item_id, None)
             self.update_table()
         except Exception as e:
-            print(f"Ocorreu um erro: {e}")
-            messagebox.showerror("Erro", "Ocorreu um erro ao excluir a senha.")
+            print(f"An error occurred: {e}")
+            messagebox.showerror("Error", "An error occurred while deleting the password.")
         else:
-            messagebox.showinfo("Success", "Senha excluída com sucesso.")
+            messagebox.showinfo("Success", "Password deleted successfully.")
 
     def _on_item_click(self, event) -> None:
-        """Copia a senha ao dar duplo clique na linha da tabela."""
+        """Copies the password on double-click of a table row."""
         selected_item = self.tree.selection()
         if not selected_item:
             return
@@ -73,12 +73,12 @@ class SavedTab:
         item_id = selected_item[0]
         password = self._password_map.get(item_id)
         if password is None:
-            messagebox.showerror("Erro", "Senha não encontrada.")
+            messagebox.showerror("Error", "Password not found.")
             return
 
         try:
             copy_to_clipboard(self.tree, password)
-            messagebox.showinfo("Success", "Password copiado para a área de transferência.")
+            messagebox.showinfo("Success", "Password copied to clipboard.")
         except Exception:
-            messagebox.showerror("Erro", "Não foi possível copiar a senha.")
+            messagebox.showerror("Error", "Could not copy the password.")
 

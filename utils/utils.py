@@ -4,7 +4,7 @@ import tkinter as tk
 
 
 def copy_to_clipboard(widget: tk.Misc, password: str) -> None:
-    """Copia a senha para a área de transferência usando o widget Tk existente."""
+    """Copies the password to the clipboard using the existing Tk widget."""
     widget.clipboard_clear()
     widget.clipboard_append(password)
     widget.update()
