@@ -16,10 +16,9 @@ def add_entry(tab_control):
         messagebox.showwarning("Vazio?", "Preencha todos os campos.")
         return
 
-    if website and email and password:
-        save_to_db(website, email, password)
-        update_table()
-        clear_fields(tab_control)
+    save_to_db(website, email, password)
+    update_table()
+    clear_fields(tab_control)
 
 def generate_password(tab_control):
     password_entry.delete(0, END)

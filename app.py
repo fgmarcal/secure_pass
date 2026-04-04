@@ -21,11 +21,10 @@ def main():
 
     window.deiconify()
 
-    canvas = Canvas(width=100, height=100)
-    logo_image = PhotoImage(file="assets/logo.png") 
+    canvas = Canvas(window, width=100, height=100)
+    logo_image = PhotoImage(file="assets/logo.png")
     logo_image_resized = logo_image.subsample(2, 2)
     canvas.create_image(50, 50, image=logo_image_resized)
-    canvas.grid(row=0, column=1)
     canvas.pack()
 
     tab_control = ttk.Notebook(window)
