@@ -1,5 +1,7 @@
 # Secure Pass: Password Manager
 
+![Secure Pass Logo](assets/brand_logo.png)
+
 A desktop password manager built with Python and Tkinter. Passwords are encrypted at rest using a master password — nothing is stored in plain text.
 
 ## Features
