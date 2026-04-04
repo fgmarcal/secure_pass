@@ -1,8 +1,10 @@
 import tkinter as tk
 from tkinter import ttk, Canvas, PhotoImage, messagebox
 from pathlib import Path
+import locales as lang
 from tabs.main_tab import MainTab
 from tabs.saved_tab import SavedTab
+from tabs.settings_tab import SettingsTab
 from tabs.master_password_dialog import prompt_master_password
 from database.database import init_db
 
@@ -11,14 +13,18 @@ ASSETS_DIR = Path(__file__).parent / "assets"
 
 def main():
     init_db()
+    lang.init()
 
     window = tk.Tk()
-    window.title("Password Manager")
+    window.title(lang.t("app_title"))
     window.geometry("500x500")
     window.withdraw()
 
     if not prompt_master_password(window):
-        messagebox.showwarning("Warning", "Master password required. The program will now exit.")
+        messagebox.showwarning(
+            lang.t("app_warning_master_required_title"),
+            lang.t("app_warning_master_required_msg"),
+        )
         window.destroy()
         return
 
@@ -34,6 +40,7 @@ def main():
 
     saved_tab = SavedTab(tab_control)
     MainTab(tab_control, saved_tab)
+    SettingsTab(tab_control)
 
     tab_control.pack(expand=1, fill="both")
 

@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import messagebox
+import locales as lang
 from database.crypto import init_crypto, SALT_FILE
 
 
@@ -12,13 +13,13 @@ def prompt_master_password(root: tk.Tk) -> bool:
     is_first_launch = not SALT_FILE.exists()
 
     dialog = tk.Toplevel(root)
-    dialog.title("Master Password")
+    dialog.title(lang.t("master_pwd_dialog_title"))
     dialog.resizable(False, False)
     dialog.grab_set()
 
     label_text = (
-        "Create a master password:" if is_first_launch
-        else "Enter your master password:"
+        lang.t("master_pwd_create_label") if is_first_launch
+        else lang.t("master_pwd_enter_label")
     )
     tk.Label(dialog, text=label_text, font=("Arial", 10, "bold"), pady=10).pack(padx=20)
 
@@ -28,7 +29,7 @@ def prompt_master_password(root: tk.Tk) -> bool:
     entry.focus()
 
     confirm_var = tk.StringVar()
-    confirm_label = tk.Label(dialog, text="Confirm master password:", font=("Arial", 10, "bold"))
+    confirm_label = tk.Label(dialog, text=lang.t("master_pwd_confirm_label"), font=("Arial", 10, "bold"))
     confirm_entry = tk.Entry(dialog, textvariable=confirm_var, show="*", width=30)
     if is_first_launch:
         confirm_label.pack(padx=20, pady=(5, 0))
@@ -39,10 +40,18 @@ def prompt_master_password(root: tk.Tk) -> bool:
     def on_submit():
         pwd = password_var.get()
         if not pwd:
-            messagebox.showwarning("Warning", "Password cannot be empty.", parent=dialog)
+            messagebox.showwarning(
+                lang.t("master_pwd_warning_empty_title"),
+                lang.t("master_pwd_warning_empty_msg"),
+                parent=dialog,
+            )
             return
         if is_first_launch and pwd != confirm_var.get():
-            messagebox.showerror("Error", "Passwords do not match.", parent=dialog)
+            messagebox.showerror(
+                lang.t("master_pwd_error_mismatch_title"),
+                lang.t("master_pwd_error_mismatch_msg"),
+                parent=dialog,
+            )
             return
         init_crypto(pwd)
         result["ok"] = True
@@ -53,8 +62,8 @@ def prompt_master_password(root: tk.Tk) -> bool:
 
     btn_frame = tk.Frame(dialog)
     btn_frame.pack(pady=10)
-    tk.Button(btn_frame, text="OK", width=10, command=on_submit).pack(side="left", padx=5)
-    tk.Button(btn_frame, text="Cancel", width=10, command=on_cancel).pack(side="left", padx=5)
+    tk.Button(btn_frame, text=lang.t("btn_ok"), width=10, command=on_submit).pack(side="left", padx=5)
+    tk.Button(btn_frame, text=lang.t("btn_cancel"), width=10, command=on_cancel).pack(side="left", padx=5)
 
     dialog.bind("<Return>", lambda e: on_submit())
     dialog.bind("<Escape>", lambda e: on_cancel())
