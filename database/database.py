@@ -90,6 +90,19 @@ def save_to_db(website: str, email: str, password: str) -> None:
         cursor.execute("INSERT INTO data (website, email, password) VALUES (?, ?, ?)", (website, email, encrypted))
         conn.commit()
 
+
+def update_in_db(row_id: int, website: str, email: str, password: str) -> None:
+    """Updates an existing record with the password encrypted."""
+    encrypted = encrypt_password(password)
+    with sqlite3.connect(DB_NAME) as conn:
+        cursor = conn.cursor()
+        cursor.execute(
+            "UPDATE data SET website = ?, email = ?, password = ? WHERE id = ?",
+            (website, email, encrypted, row_id),
+        )
+        conn.commit()
+
+
 def fetch_all() -> list[tuple[int, str, str, str | None]]:
     """Returns all records from the database with passwords decrypted."""
     with sqlite3.connect(DB_NAME) as conn:

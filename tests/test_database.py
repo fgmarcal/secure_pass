@@ -49,6 +49,24 @@ def test_delete_by_row_id_removes_only_selected_row(isolated_storage) -> None:
     assert remaining_rows[0][0] == second_id
 
 
+def test_update_by_row_id_changes_only_selected_row(isolated_storage) -> None:
+    crypto.init_crypto("master-pass")
+    db.save_to_db("example.com", "user@example.com", "secret-1")
+    db.save_to_db("other.com", "other@example.com", "secret-2")
+
+    rows = db.fetch_all()
+    first_id = rows[0][0]
+    second_id = rows[1][0]
+
+    db.update_in_db(first_id, "updated.com", "updated@example.com", "updated-secret")
+    updated_rows = db.fetch_all()
+
+    assert updated_rows == [
+        (first_id, "updated.com", "updated@example.com", "updated-secret"),
+        (second_id, "other.com", "other@example.com", "secret-2"),
+    ]
+
+
 def test_has_saved_passwords_tracks_empty_and_non_empty_db(isolated_storage) -> None:
     assert db.has_saved_passwords() is False
 

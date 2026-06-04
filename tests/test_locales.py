@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import locales as lang
+from locales import en, es, pt_br
 
 
 def test_init_uses_explicit_language() -> None:
@@ -38,3 +39,7 @@ def test_set_language_persists_and_notifies_callbacks(monkeypatch) -> None:
     assert lang.current_lang() == "es"
     assert captured["saved"] == "es"
     assert captured["calls"] == 1
+
+
+def test_all_locale_files_have_same_translation_keys() -> None:
+    assert set(en.STRINGS) == set(pt_br.STRINGS) == set(es.STRINGS)
