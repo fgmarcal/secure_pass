@@ -71,6 +71,24 @@ venv\Scripts\python app.py        # Windows
 venv/bin/python app.py            # macOS
 ```
 
+## Building a Windows Portable Executable
+
+The Windows build runs inside Docker with Wine, so it can be produced from Linux without installing Python on Windows.
+
+```bash
+chmod +x build_windows.sh
+./build_windows.sh
+```
+
+The build creates:
+
+```text
+dist/windows/SecurePass/
+dist/windows/SecurePass-windows-portable.zip
+```
+
+Unzip `SecurePass-windows-portable.zip` on Windows and run `SecurePass.exe`. The portable app creates its own vault files in `SecurePass/database/` on first launch. Existing local `database/data.db` and `database/salt.key` are not included in the Windows package.
+
 ## First Time Using the App
 
 When you open the app for the first time, you will be asked to create a master password and confirm it.

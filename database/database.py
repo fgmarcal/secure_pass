@@ -1,8 +1,8 @@
 import sqlite3
-from pathlib import Path
 from database.crypto import encrypt_password, decrypt_password
+from utils.paths import get_app_data_dir
 
-DB_NAME = Path(__file__).parent / "data.db"
+DB_NAME = get_app_data_dir() / "data.db"
 MASTER_VERIFIER_KEY = "master_verifier"
 
 def init_db() -> None:

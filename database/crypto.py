@@ -1,11 +1,11 @@
 import os
 import base64
-from pathlib import Path
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 from cryptography.hazmat.primitives import hashes
 from cryptography.fernet import Fernet, InvalidToken
+from utils.paths import get_app_data_dir
 
-SALT_FILE = Path(__file__).parent / "salt.key"
+SALT_FILE = get_app_data_dir() / "salt.key"
 MASTER_VERIFIER_PAYLOAD = "secure-pass-verifier-v1"
 
 _fernet: Fernet | None = None
