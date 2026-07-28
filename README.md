@@ -17,6 +17,7 @@ A desktop password manager built with Python and Tkinter. Passwords are encrypte
 
 - Python 3.11.7 or newer
 - `tkinter` (usually bundled with Python; see note below)
+- `curl` and `tar` for the Linux one-command installer
 
 > **Linux note:** if `tkinter` is missing, install it with your package manager:
 > ```bash
@@ -32,35 +33,48 @@ A desktop password manager built with Python and Tkinter. Passwords are encrypte
 
 ## Installation
 
-### Automatic (Linux)
+### Linux
+
+Download and run the installer with one command:
 
 ```bash
-git clone https://github.com/fgmarcal/secure_pass.git
-cd secure_pass
-chmod +x install_dependencies.sh run.sh
-./install_dependencies.sh
+curl -fsSL https://raw.githubusercontent.com/fgmarcal/secure_pass/main/install_dependencies.sh | bash
 ```
 
-### Manual
+The installer will:
+
+- download/update Secure Pass in `${XDG_DATA_HOME:-$HOME/.local/share}/secure-pass`;
+- create the Python virtual environment and install dependencies;
+- create a launcher at `$HOME/.local/bin/secure-pass`;
+- add the `secure-pass` alias to your shell profile (`.bashrc`, `.zshrc`, or `.profile`);
+- start the app automatically at the end of the installation.
+
+After installation, open a new terminal or reload your shell profile:
+
+```bash
+source ~/.bashrc   # Bash
+source ~/.zshrc    # Zsh
+```
+
+Then start the app from anywhere with:
+
+```bash
+secure-pass
+```
+
+To install into a custom directory, set `SECURE_PASS_INSTALL_DIR` before running the installer:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/fgmarcal/secure_pass/main/install_dependencies.sh | env SECURE_PASS_INSTALL_DIR="$HOME/apps/secure-pass" bash
+```
+
+### Manual / Development
 
 ```bash
 git clone https://github.com/fgmarcal/secure_pass.git
 cd secure_pass
 python3 -m venv venv
 venv/bin/pip install -r requirements.txt
-```
-
-## Running
-
-### With the launcher script (Linux)
-
-```bash
-./run.sh
-```
-
-### Manually
-
-```bash
 venv/bin/python app.py
 ```
 
